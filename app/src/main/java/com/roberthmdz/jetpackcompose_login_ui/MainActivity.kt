@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.roberthmdz.jetpackcompose_login_ui.presentation.login.LoginScreen
+import com.roberthmdz.jetpackcompose_login_ui.presentation.registration.RegistrationScreen
 import com.roberthmdz.jetpackcompose_login_ui.ui.theme.JetPackComposeLoginUITheme
 
 class MainActivity : ComponentActivity() {
@@ -16,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             JetPackComposeLoginUITheme {
-               LoginScreen()
+                RegistrationScreen()
             }
         }
     }
