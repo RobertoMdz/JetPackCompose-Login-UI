@@ -1,4 +1,5 @@
 package com.roberthmdz.jetpackcompose_login_ui.presentation.registration
+
 import androidx.compose.material.*
 
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -24,10 +27,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.roberthmdz.jetpackcompose_login_ui.presentation.components.RoundedButton
+import com.roberthmdz.jetpackcompose_login_ui.presentation.components.SocialMediaButton
 import com.roberthmdz.jetpackcompose_login_ui.presentation.components.TransparentTextField
+import com.roberthmdz.jetpackcompose_login_ui.ui.theme.FACEBOOKCOLOR
+import com.roberthmdz.jetpackcompose_login_ui.ui.theme.GMAILCOLOR
 
 @Composable
 fun RegistrationScreen() {
@@ -49,7 +56,7 @@ fun RegistrationScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(start = 16.dp, top = 16.dp, end = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
 
@@ -199,6 +206,73 @@ fun RegistrationScreen() {
                 )
 
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+
+                    Divider(
+                        modifier = Modifier.width(24.dp),
+                        thickness = 1.dp,
+                        color = Color.Gray
+                    )
+                    
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = "OR",
+                        style = MaterialTheme.typography.h6.copy(
+                            fontWeight = FontWeight.Black
+                        )
+                    )
+
+                    Divider(
+                        modifier = Modifier.width(24.dp),
+                        thickness = 1.dp,
+                        color = Color.Gray
+                    )
+
+                }
+
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Login with",
+                    style = MaterialTheme.typography.body1.copy(
+                        MaterialTheme.colors.primary
+                    ),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                SocialMediaButton(
+                    text = "Login with Facebook",
+                    onClick = {  },
+                    socialMediaColor = FACEBOOKCOLOR
+                )
+
+                SocialMediaButton(
+                    text = "Login with Gmail",
+                    onClick = { },
+                    socialMediaColor = GMAILCOLOR
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
 
         }
 
