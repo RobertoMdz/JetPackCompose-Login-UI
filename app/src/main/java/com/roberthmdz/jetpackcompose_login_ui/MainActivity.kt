@@ -92,19 +92,18 @@ fun NavGraphBuilder.addLogin(
 
     ) {
         val viewModel: LoginViewModel = hiltViewModel()
+        val email = viewModel.state.value.email
+        val password = viewModel.state.value.password
+
         if(viewModel.state.value.successLogin) {
             //NOTE: LaunchedEffect Ejecuta funciones de suspensión en el alcance de un elemento componible
             LaunchedEffect(key1 = Unit ) {
-                navController.navigate(Destinations.Home.route) {
+                navController.navigate(Destinations.Home.route + "/$email" + "/$password") {
                     // popUpTo Elimina el login screen del stack para que cuando se mueva al home y presione el boton de atras, la app se cierre y no regrese al login
                     popUpTo(Destinations.Login.route) {
                         inclusive = true
                     }
-
-
                 }
-
-
             }
 
         } else {
@@ -153,7 +152,14 @@ fun NavGraphBuilder.addRegister(
         },
         ) {
         val viewModel: RegistrationViewModel = hiltViewModel()
-        //RegistrationScreen()
+        RegistrationScreen(
+            state = viewModel.state.value,
+            onRegister = viewModel::register,
+            onBack = {
+                navController.popBackStack()
+            },
+            onDismissDialog = viewModel::hideErrorDialog
+        )
     }
 }
 
@@ -161,7 +167,8 @@ fun NavGraphBuilder.addRegister(
 fun NavGraphBuilder.addHome() {
 
     composable(
-        route = Destinations.Home.route,
+        route = Destinations.Home.route + "/{email}" + "/{password}",
+        arguments = Destinations.Home.arguments,
         enterTransition = {_, _ ->
             slideInHorizontally(
                 initialOffsetX = {1000},
@@ -186,8 +193,10 @@ fun NavGraphBuilder.addHome() {
                 animationSpec = tween(500)
             )
         },
-    ) {
-        HomeScreen("", "")
+    ) { backStackEntry ->
+        val email = backStackEntry.arguments?.getString("email") ?: ""
+        val password = backStackEntry.arguments?.getString("password") ?: ""
+        HomeScreen(email, password)
     }
 }
 
