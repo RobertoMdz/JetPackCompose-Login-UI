@@ -37,11 +37,18 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.roberthmdz.jetpackcompose_login_ui.R
+import com.roberthmdz.jetpackcompose_login_ui.presentation.components.EventDialog
 import com.roberthmdz.jetpackcompose_login_ui.presentation.components.RoundedButton
 import com.roberthmdz.jetpackcompose_login_ui.presentation.components.TransparentTextField
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    state: LoginState,
+    onLogin: (String, String) -> Unit,
+    onNavigateToRegister: () -> Unit,
+    onDismissDialog: () -> Unit,
+
+) {
     val emailValue = rememberSaveable{ mutableStateOf("")}
     val passwordValue = rememberSaveable{ mutableStateOf("")}
     var passwordVisibility by remember { mutableStateOf(false)}
@@ -121,7 +128,8 @@ fun LoginScreen() {
                                 keyboardActions = KeyboardActions(
                                     onDone = {
                                         focusManager.clearFocus()
-                                        // TODO: Implement login
+                                        onLogin(emailValue.value, passwordValue.value)
+
                                     }
                                 ),
                                 imeAction = ImeAction.Done,
@@ -165,9 +173,9 @@ fun LoginScreen() {
 
                             RoundedButton(
                                 text = "Log in",
-                                displayProgressBar = false,
+                                displayProgressBar = state.displayProgressBar,
                                 onClick = {
-                                    //TODO: Init Login
+                                    onLogin(emailValue.value, passwordValue.value)
                                 }
                             )
 
@@ -184,7 +192,7 @@ fun LoginScreen() {
                                     }
                                 },
                             ) {
-                                //TODO: Navigate to register screen
+                                onNavigateToRegister()
                             }
                         }
                     }
@@ -198,7 +206,9 @@ fun LoginScreen() {
                             end.linkTo(surface.end, margin = (36).dp)
                         },
                     backgroundColor = MaterialTheme.colors.primary,
-                    onClick = {}
+                    onClick = {
+                        onNavigateToRegister()
+                    }
                 ) {
                     Icon(
                         modifier = Modifier.size(42.dp),
@@ -210,6 +220,13 @@ fun LoginScreen() {
                 
             }
 
+        }
+
+        if(state.errorMessage != null) {
+            EventDialog(
+                errorMessage = state.errorMessage,
+                onDismiss = onDismissDialog
+            )
         }
     }
 
