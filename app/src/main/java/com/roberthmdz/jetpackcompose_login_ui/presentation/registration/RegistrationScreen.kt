@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.roberthmdz.jetpackcompose_login_ui.presentation.components.EventDialog
 import com.roberthmdz.jetpackcompose_login_ui.presentation.components.RoundedButton
 import com.roberthmdz.jetpackcompose_login_ui.presentation.components.SocialMediaButton
 import com.roberthmdz.jetpackcompose_login_ui.presentation.components.TransparentTextField
@@ -37,7 +38,12 @@ import com.roberthmdz.jetpackcompose_login_ui.ui.theme.FACEBOOKCOLOR
 import com.roberthmdz.jetpackcompose_login_ui.ui.theme.GMAILCOLOR
 
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen(
+    state: RegisterState,
+    onRegister: (String, String, String, String, String) -> Unit,
+    onBack: () -> Unit,
+    onDismissDialog: () -> Unit
+) {
     val nameValue = remember { mutableStateOf( "")}
     val emailValue = remember { mutableStateOf("") }
     val phoneValue = remember { mutableStateOf("") }
@@ -66,7 +72,7 @@ fun RegistrationScreen() {
 
                 IconButton(
                     onClick = {
-                        //TODO: Back button
+                       onBack()
                     }
                 ) {
                     
@@ -158,7 +164,13 @@ fun RegistrationScreen() {
                     keyboardActions = KeyboardActions(
                         onDone = {
                             focusManager.clearFocus()
-                            // TODO("REGISTRATION")
+                           onRegister(
+                               nameValue.value,
+                               emailValue.value,
+                               phoneValue.value,
+                               passwordValue.value,
+                               confirmPasswordValue.value
+                           )
                         }
                     ),
                     imeAction = ImeAction.Done,
@@ -181,9 +193,15 @@ fun RegistrationScreen() {
 
                 RoundedButton(
                     text = "Sign Up",
-                    displayProgressBar = false,
+                    displayProgressBar = state.displayProgressBar,
                     onClick = {
-                        // TODO("REGISTER")
+                        onRegister(
+                            nameValue.value,
+                            emailValue.value,
+                            phoneValue.value,
+                            passwordValue.value,
+                            confirmPasswordValue.value
+                        )
                     }
                 )
 
@@ -201,7 +219,7 @@ fun RegistrationScreen() {
                         }
                     },
                     onClick = {
-                        // TODO("BACK")
+                        onBack()
                     }
                 )
 
@@ -274,6 +292,10 @@ fun RegistrationScreen() {
             Spacer(modifier = Modifier.height(16.dp))
 
 
+        }
+
+        if(state.errorMessage != null) {
+            EventDialog(errorMessage = state.errorMessage, onDismiss = onDismissDialog)
         }
 
     }

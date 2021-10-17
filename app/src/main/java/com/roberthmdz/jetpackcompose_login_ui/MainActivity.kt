@@ -12,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -25,6 +26,7 @@ import com.roberthmdz.jetpackcompose_login_ui.presentation.login.LoginScreen
 import com.roberthmdz.jetpackcompose_login_ui.presentation.login.LoginViewModel
 import com.roberthmdz.jetpackcompose_login_ui.presentation.navigation.Destinations
 import com.roberthmdz.jetpackcompose_login_ui.presentation.registration.RegistrationScreen
+import com.roberthmdz.jetpackcompose_login_ui.presentation.registration.RegistrationViewModel
 import com.roberthmdz.jetpackcompose_login_ui.ui.theme.JetPackComposeLoginUITheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -90,15 +92,31 @@ fun NavGraphBuilder.addLogin(
 
     ) {
         val viewModel: LoginViewModel = hiltViewModel()
-        LoginScreen(
-            state = viewModel.state.value,
-            onLogin = viewModel::login,
-            onNavigateToRegister = {
-                navController.navigate(Destinations.Register.route)
-            },
-            onDismissDialog = viewModel::hideErrorDialog
+        if(viewModel.state.value.successLogin) {
+            //NOTE: LaunchedEffect Ejecuta funciones de suspensión en el alcance de un elemento componible
+            LaunchedEffect(key1 = Unit ) {
+                navController.navigate(Destinations.Home.route) {
+                    // popUpTo Elimina el login screen del stack para que cuando se mueva al home y presione el boton de atras, la app se cierre y no regrese al login
+                    popUpTo(Destinations.Login.route) {
+                        inclusive = true
+                    }
 
-        )
+
+                }
+
+
+            }
+
+        } else {
+            LoginScreen(
+                state = viewModel.state.value,
+                onLogin = viewModel::login,
+                onNavigateToRegister = {
+                    navController.navigate(Destinations.Register.route)
+                },
+                onDismissDialog = viewModel::hideErrorDialog
+            )
+        }
     }
 }
 
@@ -134,7 +152,8 @@ fun NavGraphBuilder.addRegister(
             )
         },
         ) {
-        RegistrationScreen()
+        val viewModel: RegistrationViewModel = hiltViewModel()
+        //RegistrationScreen()
     }
 }
 
